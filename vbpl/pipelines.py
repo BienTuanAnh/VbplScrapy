@@ -29,9 +29,11 @@
 from py2neo import Graph
 from py2neo import Node
 from py2neo import Relationship
+from py2neo import authenticate
 
 class VbplPipeline(object):
 	def __init__(self):
+		authenticate("localhost:7474", "neo4j", "123456")
 		self.graph = Graph()
 	def process_item(self, item, spider):
 		document = item['document']
