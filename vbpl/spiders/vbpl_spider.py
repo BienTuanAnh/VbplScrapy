@@ -44,9 +44,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 		r'\/_layouts\/authenticate.aspx.*',
 		r'\/Pages\/sitemap.aspx',
 		r'http:\/\/vbpl.vn\/TW\/Pages\/vbpqen.aspx',
-		r'\/.*vbpq-timkiem\.aspx.*',
-		r'\/noidung\/news\/Lists\/.*'
-
+		r'\/.*vbpq-timkiem\.aspx.*'
 
 		
 	]
@@ -69,11 +67,20 @@ class TrangVangVietNamSpider(CrawlSpider):
 				])
 			),
 
+		Rule(LinkExtractor(
+			allow('\/noidung\/news\/Lists\/.*'),
+			deny=__queue,
+			restrict_xpaths=[]
+			)
+		),
+
 		# Extract earch pages (TW+ location)
 		Rule(
 			LinkExtractor(
 				allow=(
-					'\/.*\/Pages\/vanban.aspx\?fromyear=\d{2}\/\d{2}\/\d{4}.*toyear=\d{2}\/\d{2}\/\d{4}.*'
+					'\/.*\/Pages\/vanban.aspx\?fromyear=\d{2}\/\d{2}\/\d{4}.*toyear=\d{2}\/\d{2}\/\d{4}.*',
+					'\/TW\/Pages\/vanban.aspx\?cqbh=\d+.*',
+					'\/TW\/Pages\/vanban.aspx\?idLoaiVanBan=\d+.*'
 					),
 				deny=__queue,
 				restrict_xpaths=[]
@@ -88,7 +95,8 @@ class TrangVangVietNamSpider(CrawlSpider):
 	    	deny=__queue,
 	    	restrict_xpaths=[
 	    	]), 
-	    	callback='parse_fulltext_data'
+	    	callback='parse_fulltext_data',
+	    	follow = True
 	    	)
 	    ]
 
@@ -144,7 +152,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 		vbpl_item['related_documents'] = related_document_list
 
 
-		yield vbpl_item
+		return vbpl_item
 
 
 	def parse_history_data(self, response):
