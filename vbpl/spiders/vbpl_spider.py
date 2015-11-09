@@ -68,7 +68,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 			),
 
 		Rule(LinkExtractor(
-			allow('\/noidung\/news\/Lists\/.*'),
+			allow=('\/noidung\/news\/Lists\/.*'),
 			deny=__queue,
 			restrict_xpaths=[]
 			)
@@ -151,8 +151,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 		# Add to vbpl item
 		vbpl_item['related_documents'] = related_document_list
 
-
-		return vbpl_item
+		yield vbpl_item
 
 
 	def parse_history_data(self, response):
@@ -179,9 +178,11 @@ class TrangVangVietNamSpider(CrawlSpider):
 		
 		vbpl_item['histories'] = history_list
 
-		yield scrapy.Request(response.url.replace('lichsu', 'vanbanlienquan'),
+		scrapy.Request(response.url.replace('lichsu', 'vanbanlienquan'),
 			meta = {'vbpl_item': vbpl_item},
 			callback=self.parse_related_document)
+
+		return
 
 
 
@@ -211,9 +212,11 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 
 		# parse history
-		yield scrapy.Request(response.url.replace('thuoctinh', 'lichsu'),
+		scrapy.Request(response.url.replace('thuoctinh', 'lichsu'),
 			meta = {'vbpl_item': vbpl_item},
 			callback=self.parse_history_data)
+
+		return
 
 
 	
@@ -237,9 +240,11 @@ class TrangVangVietNamSpider(CrawlSpider):
 			vbpl_item['document']['content'] = self.extract(response, "//div[@id='toanvancontent']//text()")
 
 			# parse attribute
-			yield scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
+			scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
 			 meta = {'vbpl_item': vbpl_item},
 			 callback=self.parse_attribute_data)
+
+			return
 
 			# # parse history
 			# yield scrapy.Request(url.replace('toanvan', 'lichsu'),
