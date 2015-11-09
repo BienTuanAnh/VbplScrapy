@@ -56,36 +56,36 @@ class TrangVangVietNamSpider(CrawlSpider):
 	# 	if 'url' in i:
 	# 		__queue.append(i['url'])
 
-	# rules = [
-	# 	# Extract TW and location
-	# 	Rule(
-	# 		LinkExtractor(
-	# 			allow=(), 
-	# 			deny=__queue,
-	# 			restrict_xpaths=[
-	# 				"//div[@class='box-toplink']"
-	# 			])
-	# 		),
+	rules = [
+		# Extract TW and location
+		# Rule(
+		# 	LinkExtractor(
+		# 		allow=(), 
+		# 		deny=__queue,
+		# 		restrict_xpaths=[
+		# 			"//div[@class='box-toplink']"
+		# 		])
+		# 	),
 
-	# 	Rule(LinkExtractor(
-	# 		allow=('\/noidung\/news\/Lists\/.*'),
-	# 		deny=__queue,
-	# 		restrict_xpaths=[]
-	# 		)
-	# 	),
+		# Rule(LinkExtractor(
+		# 	allow=('\/noidung\/news\/Lists\/.*'),
+		# 	deny=__queue,
+		# 	restrict_xpaths=[]
+		# 	)
+		# ),
 
-	# 	# Extract earch pages (TW+ location)
-	# 	Rule(
-	# 		LinkExtractor(
-	# 			allow=(
-	# 				'\/.*\/Pages\/vanban.aspx\?fromyear=\d{2}\/\d{2}\/\d{4}.*toyear=\d{2}\/\d{2}\/\d{4}.*',
-	# 				'\/TW\/Pages\/vanban.aspx\?cqbh=\d+.*',
-	# 				'\/TW\/Pages\/vanban.aspx\?idLoaiVanBan=\d+.*'
-	# 				),
-	# 			deny=__queue,
-	# 			restrict_xpaths=[]
-	# 			)
-	# 		),
+		# # Extract earch pages (TW+ location)
+		# Rule(
+		# 	LinkExtractor(
+		# 		allow=(
+		# 			'\/.*\/Pages\/vanban.aspx\?fromyear=\d{2}\/\d{2}\/\d{4}.*toyear=\d{2}\/\d{2}\/\d{4}.*',
+		# 			'\/TW\/Pages\/vanban.aspx\?cqbh=\d+.*',
+		# 			'\/TW\/Pages\/vanban.aspx\?idLoaiVanBan=\d+.*'
+		# 			),
+		# 		deny=__queue,
+		# 		restrict_xpaths=[]
+		# 		)
+		# 	),
 
 	    Rule(
 	    	LinkExtractor(
