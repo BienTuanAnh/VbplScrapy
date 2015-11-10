@@ -30,7 +30,9 @@ class DocumentItem(scrapy.Item):
     effect = scrapy.Field()
     gazette_date = scrapy.Field()
     field = scrapy.Field()
-    chairman = scrapy.Field()
+    signer_title = scrapy.Field()
+    signer_name = scrapy.Field()
+
 
 class HistoryItem(scrapy.Item):
  	history_id = scrapy.Field()

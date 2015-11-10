@@ -40,8 +40,7 @@ class VbplPipeline(object):
 		histories = item['histories']
 		related_documents = item['related_documents']
 
-		print("Putting LegalNormativeDocument to Neo4j: {}".format(document['document_id']))
-
+		# Create document node
 		document_node = self.graph.merge_one("LegalNormativeDocument", "id", document['document_id'])
 		document_node.properties['content'] = document['content']
 		document_node.properties['title'] = document['title']
@@ -54,8 +53,10 @@ class VbplPipeline(object):
 		document_node.properties['effective_date'] = document['effective_date']
 		document_node.properties['gazette_date'] = document['gazette_date']
 		document_node.properties['field'] = document['field']
-		document_node.properties['chairman'] = document['chairman']
+		document_node.properties['signer_title'] = document['signer_title']
+		document_node.properties['signer_name'] = document['signer_name']
 		document_node.push()
+
 
 		for history in histories:
 			history_node = self.graph.merge_one("History", "id", history['history_id'])

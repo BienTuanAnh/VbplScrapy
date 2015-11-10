@@ -205,7 +205,9 @@ class TrangVangVietNamSpider(CrawlSpider):
 		vbpl_item['document']['field'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[5]/td[3]/following-sibling::td[1]//text()", '')		
 
 		vbpl_item['document']['issuing_office'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['chairman'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[3]/following-sibling::td[1]//text()", '')
+		vbpl_item['document']['signer_name'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[4]//text()", '')
+		vbpl_item['document']['signer_title'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[3]//text()", '')
+
 
 		vbpl_item['document']['effective_area'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[7]/td[1]/following-sibling::td[1]//text()", '')
 
