@@ -44,7 +44,8 @@ class TrangVangVietNamSpider(CrawlSpider):
 		r'\/_layouts\/authenticate.aspx.*',
 		r'\/Pages\/sitemap.aspx',
 		r'http:\/\/vbpl.vn\/TW\/Pages\/vbpqen.aspx',
-		r'\/.*vbpq-timkiem\.aspx.*'
+		r'\/.*vbpq-timkiem\.aspx.*',
+		r'\/pages\/dieu-uoc-home.aspx'
 
 		
 	]
@@ -57,17 +58,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 	# 		__queue.append(i['url'])
 
 	rules = [
-		# Extract TW and location
-		Rule(
-			LinkExtractor(
-				allow=(), 
-				deny=__queue,
-				restrict_xpaths=[
-					"//div[@class='box-toplink']"
-				]),
-			follow = False
-			),
-
+		# Extract news
 		Rule(
 			LinkExtractor(
 			allow=('\/noidung\/news\/Lists\/.*'),
@@ -75,6 +66,16 @@ class TrangVangVietNamSpider(CrawlSpider):
 			restrict_xpaths=[]
 			)
 		),
+
+		# Extract TW and location
+		Rule(
+			LinkExtractor(
+				allow=(), 
+				deny=__queue,
+				restrict_xpaths=[
+					"//div[@class='box-toplink']"
+				])
+			),
 
 		# Extract earch pages (TW+ location)
 		Rule(
@@ -85,8 +86,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 				'\/TW\/Pages\/vanban.aspx\?idLoaiVanBan=\d+'
 				),
 			deny=__queue
-			),
-			follow = False
+			)
 		),
 
 		Rule(
@@ -98,8 +98,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 					),
 				deny=__queue,
 				restrict_xpaths=[]
-				),
-			follow = False
+				)
 			),
 
 	    Rule(
@@ -192,11 +191,9 @@ class TrangVangVietNamSpider(CrawlSpider):
 		
 		vbpl_item['histories'] = history_list
 
-		scrapy.Request(response.url.replace('lichsu', 'vanbanlienquan'),
+		yield scrapy.Request(response.url.replace('lichsu', 'vanbanlienquan'),
 			meta = {'vbpl_item': vbpl_item},
 			callback=self.parse_related_document)
-
-		return
 
 
 
@@ -228,12 +225,9 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 
 		# parse history
-		scrapy.Request(response.url.replace('thuoctinh', 'lichsu'),
+		yield scrapy.Request(response.url.replace('thuoctinh', 'lichsu'),
 			meta = {'vbpl_item': vbpl_item},
 			callback=self.parse_history_data)
-
-		return
-
 
 	
 	def parse_fulltext_data(self, response):
@@ -256,11 +250,10 @@ class TrangVangVietNamSpider(CrawlSpider):
 			vbpl_item['document']['content'] = self.extract(response, "//div[@id='toanvancontent']//text()")
 
 			# parse attribute
-			scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
+			yield scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
 			 meta = {'vbpl_item': vbpl_item},
 			 callback=self.parse_attribute_data)
 
-			return
 
 			# # parse history
 			# yield scrapy.Request(url.replace('toanvan', 'lichsu'),
