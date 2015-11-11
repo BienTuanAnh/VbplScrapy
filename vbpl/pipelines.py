@@ -42,30 +42,30 @@ class VbplPipeline(object):
 
 		# Create document node
 		document_node = self.graph.merge_one("LegalNormativeDocument", "id", document['document_id'])
-		document_node.properties['content'] = document['content']
-		document_node.properties['title'] = document['title']
-		document_node.properties['official_number'] = document['official_number']
-		document_node.properties['legislation_type'] = document['legislation_type']
-		document_node.properties['source'] = document['source']
-		document_node.properties['department'] = document['department']
-		document_node.properties['issuing_office'] = document['issuing_office']
-		document_node.properties['effective_area'] = document['effective_area']
-		document_node.properties['effective_date'] = document['effective_date']
-		document_node.properties['gazette_date'] = document['gazette_date']
-		document_node.properties['field'] = document['field']
-		document_node.properties['signer_title'] = document['signer_title']
-		document_node.properties['signer_name'] = document['signer_name']
+		document_node.properties['content'] = document.get('content', '')
+		document_node.properties['title'] = document.get('title','')
+		document_node.properties['official_number'] = document.get('official_number','')
+		document_node.properties['legislation_type'] = document.get('legislation_type','')
+		document_node.properties['source'] = document.get('source','')
+		document_node.properties['department'] = document.get('department', '')
+		document_node.properties['issuing_office'] = document.get('issuing_office', '')
+		document_node.properties['effective_area'] = document.get('effective_area','')
+		document_node.properties['effective_date'] = document.get('effective_date', '')
+		document_node.properties['gazette_date'] = document.get('gazette_date', '')
+		document_node.properties['field'] = document.get('field', '')
+		document_node.properties['signer_title'] = document.get('signer_title', '')
+		document_node.properties['signer_name'] = document.get('signer_name', '')
 		document_node.push()
 
 
 		for history in histories:
 			history_node = self.graph.merge_one("History", "id", history['history_id'])
 			# history_node.properties['document_id'] = history['document_id']
-			history_node.properties['title'] = history['title']
-			history_node.properties['date'] = history['date']
-			history_node.properties['status'] = history['status']
-			history_node.properties['original_document'] = history['original_document']
-			history_node.properties['ineffective_part'] = history['ineffective_part']
+			history_node.properties['title'] = history.get('title', '')
+			history_node.properties['date'] = history.get('date', '')
+			history_node.properties['status'] = history.get('status', '')
+			history_node.properties['original_document'] = history.get('original_document', '')
+			history_node.properties['ineffective_part'] = history.get('ineffective_part', '')
 			history_node.push()
 
 			# Add 'HAS' relationship
@@ -74,8 +74,8 @@ class VbplPipeline(object):
 		for related_document in related_documents:
 			# related_document_node.properties['document_id'] = related_document['document_id']
 			related_document_node = self.graph.merge_one("RelatedDocument", "id", related_document['related_document_id'])
-			related_document_node.properties['title'] = related_document['title']
-			related_document_node.properties['relating_type'] = related_document['relating_type']
+			related_document_node.properties['title'] = related_document.get('title', '')
+			related_document_node.properties['relating_type'] = related_document.get('relating_type', '')
 			related_document_node.push()
 
 			# Add "HAS" relationship

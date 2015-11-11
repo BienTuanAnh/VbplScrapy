@@ -27,13 +27,9 @@ class TrangVangVietNamSpider(CrawlSpider):
 	]
 
 	start_urls = [
-		"http://vbpl.vn/Pages/portal.aspx"
-		# 'http://vbpl.vn/Pages/portal.aspx'
-		# "http://vbpl.vn/TW/Pages/vbpq-vanbanlienquan.aspx?ItemID=92637",
-		# "http://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=32507",
-		# "http://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=23776",
-		# "http://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=13716",
-		# "http://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=13716"
+		# "http://vbpl.vn/Pages/portal.aspx"
+		"http://vbpl.vn/TW/Pages/vbpq-thuoctinh.aspx?ItemID=92638",
+		"http://vbpl.vn/TW/Pages/vbpq-thuoctinh.aspx?ItemID=30614"
 	]
 
 	__queue = [
@@ -198,30 +194,42 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 
 	def parse_attribute_data(self, response):
+		SO_KI_HIEU = 'S\xe1\xbb\x91 k\xc3\xbd hi\xe1\xbb\x87u'
+		NGAY_BAN_HANH = 'Ng\xc3\xa0y ban h\xc3\xa0nh'
+		LOAI_VAN_BAN = 'Lo\xe1\xba\xa1i v\xc4\x83n b\xe1\xba\xa3n'
+		NGAY_CO_HIEU_LUC = 'Ng\xc3\xa0y c\xc3\xb3 hi\xe1\xbb\x87u l\xe1\xbb\xb1c'
+		NGUON_THU_THAP = 'Ngu\xe1\xbb\x93n thu th\xe1\xba\xadp'
+		NGAY_DANG_CONG_BAO = 'Ng\xc3\xa0y \xc4\x91\xc4\x83ng c\xc3\xb4ng b\xc3\xa1o'
+		NGANH = 'Ng\xc3\xa0nh'
+		LINH_VUC = 'L\xc4\xa9nh v\xe1\xbb\xb1c'
+		CO_QUAN_BAN_HANH = 'C\xc6\xa1 quan ban h\xc3\xa0nh/ Ch\xe1\xbb\xa9c danh / Ng\xc6\xb0\xe1\xbb\x9di k\xc3\xbd'
+		PHAM_VI = 'Ph\xe1\xba\xa1m vi'
+
 		vbpl_item = response.meta['vbpl_item']
 
 		vbpl_item['document']['effect'] = self.extract(response, "//div[@class='vbInfo']/ul/li[1]/text()", '')
 
 		vbpl_item['document']['title'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[1]/td[@class='title']//text()", '')
 
-		vbpl_item['document']['official_number'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[2]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['issued_date'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[2]/td[3]/following-sibling::td[1]//text()", '')
-
-		vbpl_item['document']['legislation_type'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[3]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['effective_date'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[3]/td[3]/following-sibling::td[1]//text()", '')
-
-		vbpl_item['document']['source'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[4]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['gazette_date'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[4]/td[3]/following-sibling::td[1]//text()", '')
-
-		vbpl_item['document']['department'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[5]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['field'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[5]/td[3]/following-sibling::td[1]//text()", '')		
-
-		vbpl_item['document']['issuing_office'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[1]/following-sibling::td[1]//text()", '')
-		vbpl_item['document']['signer_name'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[4]//text()", '')
-		vbpl_item['document']['signer_title'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[6]/td[3]//text()", '')
 
 
-		vbpl_item['document']['effective_area'] = self.extract(response, "//div[@class='vbProperties']/table/tbody/tr[7]/td[1]/following-sibling::td[1]//text()", '')
+		rows = response.xpath("//div[@class='vbProperties']/table/tbody/tr/td")
+
+		for row in rows:
+			label = self.extract(row,"text()", '').encode('UTF-8')
+			if label == SO_KI_HIEU: vbpl_item['document']['official_number'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == NGAY_BAN_HANH: vbpl_item['document']['issued_date'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == LOAI_VAN_BAN: vbpl_item['document']['legislation_type'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == NGAY_CO_HIEU_LUC: vbpl_item['document']['effective_date'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == NGUON_THU_THAP: vbpl_item['document']['source'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == NGAY_DANG_CONG_BAO: vbpl_item['document']['gazette_date'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == NGANH: vbpl_item['document']['department'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == LINH_VUC: vbpl_item['document']['field'] = self.extract(row, "following-sibling::td[1]//text()")
+			elif label == CO_QUAN_BAN_HANH: 
+				vbpl_item['document']['issuing_office'] = self.extract(row, "following-sibling::td[1]//text()")
+				vbpl_item['document']['signer_title'] = self.extract(row, "following-sibling::td[2]//text()")
+				vbpl_item['document']['signer_name'] = self.extract(row, "following-sibling::td[3]//text()")
+			elif label == PHAM_VI: vbpl_item['document']['effective_area'] = self.extract(row, "following-sibling::td[1]//text()")
 
 
 		# parse history
@@ -231,28 +239,30 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 	
 	def parse_fulltext_data(self, response):
+		se = re.search('\d+', response.url)
 
-		document_id = re.search('\d+', response.url).group()
+		if se is not None:
+			document_id = se.group()
 
-		if document_id not in self.document_crawled:
+			if document_id not in self.document_crawled:
 
-			self.document_crawled.append(document_id)
+				self.document_crawled.append(document_id)
 
-			# Init vbpl item
-			vbpl_item = VbplItem()
+				# Init vbpl item
+				vbpl_item = VbplItem()
 
-			vbpl_item['document'] = DocumentItem()
+				vbpl_item['document'] = DocumentItem()
 
-			# Get document id
-			vbpl_item['document']['document_id'] = document_id
+				# Get document id
+				vbpl_item['document']['document_id'] = document_id
 
-			# Get document content
-			vbpl_item['document']['content'] = self.extract(response, "//div[@id='toanvancontent']//text()")
+				# Get document content
+				vbpl_item['document']['content'] = self.extract(response, "//div[@id='toanvancontent']//text()")
 
-			# parse attribute
-			yield scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
-			 meta = {'vbpl_item': vbpl_item},
-			 callback=self.parse_attribute_data)
+				# parse attribute
+				yield scrapy.Request(response.url.replace('toanvan', 'thuoctinh'),
+				 meta = {'vbpl_item': vbpl_item},
+				 callback=self.parse_attribute_data)
 
 
 			# # parse history
