@@ -14,6 +14,10 @@ from ..items import DocumentItem
 from ..items import HistoryItem
 from ..items import RelatedDocumentItem
 from ..items import VbplItem
+from py2neo import Graph
+from py2neo import Node
+from py2neo import Relationship
+from py2neo import authenticate
 #from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import re
 import itertools
@@ -27,9 +31,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 	]
 
 	start_urls = [
-		# "http://vbpl.vn/Pages/portal.aspx"
-		"http://vbpl.vn/TW/Pages/vbpq-thuoctinh.aspx?ItemID=92638",
-		"http://vbpl.vn/TW/Pages/vbpq-thuoctinh.aspx?ItemID=30614"
+		"http://vbpl.vn/Pages/portal.aspx"
 	]
 
 	__queue = [
@@ -45,6 +47,11 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 		
 	]
+
+	authenticate("localhost:7474", "neo4j", "123456")
+	graph = Graph()
+	for record in graph.cypher.execute("match (a:LegalNormativeDocument) return a.id as id"):
+		__queue.append("http://vbpl.vn/noidung/news/Lists/ThongBao/View_Detail.aspx?ItemID={}".format(record.id))
 	# client = MongoClient(settings.get('MONGODB_URI'))
 	# db = client[settings.get('MONGODB_DATABASE')]
 
