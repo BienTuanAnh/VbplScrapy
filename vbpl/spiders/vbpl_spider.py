@@ -48,10 +48,12 @@ class TrangVangVietNamSpider(CrawlSpider):
 		
 	]
 
-	authenticate("localhost:7474", "neo4j", "123456")
-	graph = Graph()
-	for record in graph.cypher.execute("match (a:LegalNormativeDocument) return a.id as id"):
-		__queue.append("http://vbpl.vn/noidung/news/Lists/ThongBao/View_Detail.aspx?ItemID={}".format(record.id))
+	# authenticate("localhost:7474", "neo4j", "123456")
+	# graph = Graph()
+	# for record in graph.cypher.execute("match (a:LegalNormativeDocument) return a.id as id"):
+	# 	__queue.append("http://vbpl.vn/noidung/news/Lists/ThongBao/View_Detail.aspx?ItemID={}".format(record.id))
+
+	
 	# client = MongoClient(settings.get('MONGODB_URI'))
 	# db = client[settings.get('MONGODB_DATABASE')]
 
@@ -154,7 +156,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 				related_doc_url = self.extract(row_doc, "@href", '')
 				related_document_item['related_document_id'] =  re.search("\d+", related_doc_url).group()
 
-				# related_doc_url_full = response.urljoin(related_doc_url)
+				related_doc_url_full = response.urljoin(related_doc_url)
 
 				# Extract title
 				related_document_item['title'] = self.extract(row_doc, "text()")
@@ -162,7 +164,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 				related_document_list.append(related_document_item)
 
-				# yield scrapy.Request(related_doc_url_full, callback=self.parse_fulltext_data)
+				yield scrapy.Request(related_doc_url_full, callback=self.parse_fulltext_data)
 
 		# Add to vbpl item
 		vbpl_item['related_documents'] = related_document_list
