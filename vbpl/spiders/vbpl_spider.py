@@ -154,7 +154,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 				related_doc_url = self.extract(row_doc, "@href", '')
 				related_document_item['related_document_id'] =  re.search("\d+", related_doc_url).group()
 
-				related_doc_url_full = response.urljoin(related_doc_url)
+				# related_doc_url_full = response.urljoin(related_doc_url)
 
 				# Extract title
 				related_document_item['title'] = self.extract(row_doc, "text()")
@@ -162,7 +162,7 @@ class TrangVangVietNamSpider(CrawlSpider):
 
 				related_document_list.append(related_document_item)
 
-				yield scrapy.Request(related_doc_url_full, callback=self.parse_fulltext_data)
+				# yield scrapy.Request(related_doc_url_full, callback=self.parse_fulltext_data)
 
 		# Add to vbpl item
 		vbpl_item['related_documents'] = related_document_list
